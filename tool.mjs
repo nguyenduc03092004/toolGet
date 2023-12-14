@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer'
 let data = fs.readFileSync("./listPhone.doc", "utf-8")
 data = data.split(",")
 const tool = express()
+let account = []
 tool.get('/', async (req, res) => {
     for (let i = 0; i < data.length; i++) {
         if (i == data.length - 1) {
@@ -19,10 +20,21 @@ tool.get('/', async (req, res) => {
         await page.waitForSelector('#captcha');
         const content = await page.$eval('#captcha', div => div.textContent);
         await page.type('#captcha-input', content);
+        const elementExists = await page.evaluate(() => {
+            const element = document.querySelector('h2#swal2-title');
+            return !!element; // Trả về true nếu phần tử tồn tại, false nếu không tồn tại
+        });
+
+        if (!elementExists) {
+            account.push(data[i])
+        }
         await browser.close()
+        console.log("acc trung la", account)
     }
 })
+
 tool.get('/done', (req, res) => {
+    console.log("acc trung la", account)
     res.send("done")
 })
 tool.listen(8000, () => {
