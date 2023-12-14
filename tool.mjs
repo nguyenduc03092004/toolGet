@@ -12,7 +12,7 @@ tool.get('/', async (req, res) => {
         const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
         await page.setViewport({ width: 1366, height: 768 })
-        await page.goto('https://hi88.tv/');
+        await page.goto('https://code-live.hi88.tv/');
         await page.type('#code-id', data[i]);
         await page.waitForSelector('#submit-btn');
         await page.click('#submit-btn');
